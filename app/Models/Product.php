@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model
 {
@@ -29,5 +30,14 @@ class Product extends Model
             'low_stock_threshold' => 'integer',
             'status' => ProductStatus::class,
         ];
+    }
+
+    public function scopeLowStock(Builder $query): Builder
+    {
+        return $query->where(
+            'stock_quantity',
+            '<=',
+            'low_stock_threshold'
+        );
     }
 }
