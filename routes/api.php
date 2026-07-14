@@ -15,7 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('products/{product}/stock', [ProductController::class, 'adjustStock']);
-Route::get('products/low-stock', [ProductController::class, 'lowStock']);
+Route::middleware('throttle:api-read')->group(function () {
+    Route::get('products/low-stock', [ProductController::class, 'lowStock']);
+    Route::apiResource('products', ProductController::class)->only([
+        'index',
+        'show',
+    ]);
+});
 
-Route::apiResource('products', ProductController::class);
+Route::middleware('throttle:api-write')->group(function () {
+    Route::post('products/{product}/stock', [ProductController::class, 'adjustStock']);
+    Route::apiResource('products', ProductController::class)->only([
+        'store',
+        'update',
+        'destroy',
+    ]);
+});
