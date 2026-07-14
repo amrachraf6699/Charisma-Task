@@ -6,11 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Products\{AdjustStockRequest, StoreRequest, UpdateRequest};
 use App\Http\Resources\API\ProductResource;
 use App\Models\Product;
+use App\Repositories\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
+    public function __construct(
+        private readonly ProductRepositoryInterface $products
+    ) {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -21,7 +27,7 @@ class ProductController extends Controller
             ->remember(
                 'products:index:page:' . $request->query('page', 1),
                 now()->addSeconds((int) config('cache.product_listing_ttl')),
-                fn () => Product::paginate()
+                fn () => $this->products->paginate()
             );
 
         return $this->success(
@@ -44,7 +50,7 @@ class ProductController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $product = Product::create($request->validated());
+        $product = $this->products->create($request->validated());
 
         return $this->success(
             200,
@@ -70,12 +76,12 @@ class ProductController extends Controller
      */
     public function update(UpdateRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $product = $this->products->update($product, $request->validated());
 
         return $this->success(
             200,
             'Product updated successfully.',
-            ProductResource::make($product->refresh())
+            ProductResource::make($product)
         );
     }
 
@@ -84,7 +90,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+        $this->products->delete($product);
 
         return $this->success(
             200,
@@ -100,22 +106,18 @@ class ProductController extends Controller
             return $this->error(422, "The new stock can't be in negative");
         }
 
-        $product->update([
-            'stock_quantity' => $newStock,
-        ]);
-
-        $product->refresh();
+        $product = $this->products->adjustStock($product, $request->integer('quantity'));
 
         return $this->success(
             200,
             'Product stock adjusted successfully.',
-            ProductResource::make($product->refresh())
+            ProductResource::make($product)
         );
     }
 
     public function lowStock()
     {
-        $products = Product::lowStock()->paginate();
+        $products = $this->products->paginateLowStock();
 
         return $this->success(
             200,
