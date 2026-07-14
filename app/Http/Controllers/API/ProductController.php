@@ -7,15 +7,22 @@ use App\Http\Requests\API\Products\{AdjustStockRequest, StoreRequest, UpdateRequ
 use App\Http\Resources\API\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate();
+        $products = Cache::store('redis')
+            ->tags(['products'])
+            ->remember(
+                'products:index:page:' . $request->query('page', 1),
+                now()->addSeconds((int) config('cache.product_listing_ttl')),
+                fn () => Product::paginate()
+            );
 
         return $this->success(
             200,
