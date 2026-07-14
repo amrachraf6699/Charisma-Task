@@ -1,66 +1,184 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Product Inventory Microservice
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel REST API for managing products and stock levels.
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.1+
+- Laravel 10
+- PostgreSQL
+- Redis
+- Docker Compose
+- PHPUnit
+- L5-Swagger
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Product CRUD API
+- UUID product IDs
+- Soft deletes
+- Stock adjustment endpoint
+- Low-stock listing
+- Redis cache for product listing
+- Cache TTL and invalidation on product writes
+- Rate limiting for read/write API routes
+- Low-stock event/listener alert
+- Repository pattern
+- Structured JSON responses and exception handling
+- Swagger UI documentation
+- Feature test coverage
 
-## Learning Laravel
+## Docker Setup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Copy the environment file:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+cp .env.example .env
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Start the full stack:
 
-## Laravel Sponsors
+```bash
+docker compose up --build
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+The app will be available at:
 
-### Premium Partners
+```text
+http://localhost:8000
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+The compose stack includes Laravel/PHP, PostgreSQL, and Redis. The app container installs dependencies, runs migrations, and starts the Laravel development server.
 
-## Contributing
+## Local Setup
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install dependencies:
 
-## Code of Conduct
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Create `.env`:
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Run migrations:
 
-## License
+```bash
+php artisan migrate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Start the app:
+
+```bash
+php artisan serve
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/products` | List products with pagination |
+| `GET` | `/api/products/{product}` | Get a single product |
+| `POST` | `/api/products` | Create a product |
+| `PUT` | `/api/products/{product}` | Update a product |
+| `DELETE` | `/api/products/{product}` | Soft delete a product |
+| `POST` | `/api/products/{product}/stock` | Adjust stock |
+| `GET` | `/api/products/low-stock` | List products below threshold |
+
+## Swagger Documentation
+
+Generate Swagger docs:
+
+```bash
+php artisan l5-swagger:generate
+```
+
+Open Swagger UI:
+
+```text
+http://localhost:8000/api/documentation
+```
+
+## Postman
+
+A Postman collection is included:
+
+```text
+postman_collection.json
+```
+
+## Testing
+
+Run the test suite:
+
+```bash
+php artisan test
+```
+
+The tests use SQLite in-memory through `phpunit.xml`.
+
+## Formatting
+
+Check PSR-12 formatting:
+
+```bash
+./vendor/bin/pint --test
+```
+
+Format the codebase:
+
+```bash
+./vendor/bin/pint
+```
+
+## Response Format
+
+Successful responses:
+
+```json
+{
+  "success": true,
+  "message": "Products fetched successfully.",
+  "data": [],
+  "meta": {
+    "pagination": {
+      "current_page": 1,
+      "last_page": 1,
+      "per_page": 15,
+      "total": 0
+    }
+  }
+}
+```
+
+## Architecture Notes
+
+This service is a Laravel 10 JSON API for product inventory and stock operations. Routes are defined in `routes/api.php` and handled by `ProductController`. Responses are normalized through the `ApiResponse` trait, and the exception handler converts validation failures, missing models, authorization failures, method errors, and rate-limit errors into structured API responses.
+
+Products use UUID primary keys, soft deletes, a unique SKU, decimal pricing, stock quantity, low-stock threshold, and enum status. The `lowStock` model scope keeps the threshold query close to the model.
+
+`ProductRepositoryInterface` defines product persistence operations, with `EloquentProductRepository` as the current implementation. The controller depends on the interface so HTTP concerns remain separate from data access.
+
+`GET /api/products` is cached in Redis with a TTL controlled by `PRODUCT_LISTING_CACHE_TTL`. Product observer hooks flush the product cache tag on create, update, delete, restore, and force delete, keeping cached listings fresh after writes.
+
+`ProductObserver` dispatches `ProductStockBecameLow` when stock is at or below the configured threshold. `SendLowStockAlert` currently logs the alert, leaving room for email, queues, or notification channels later.
+
+Docker Compose runs Laravel/PHP, PostgreSQL, and Redis. PostgreSQL is the delivery database, while tests use SQLite in-memory for speed and isolation. L5-Swagger generates API documentation from annotations in `app/Swagger/ProductApiDocumentation.php`.
+
+Error responses:
+
+```json
+{
+  "success": false,
+  "message": "Validation failed.",
+  "data": {
+    "sku": [
+      "The sku field is required."
+    ]
+  }
+}
+```
