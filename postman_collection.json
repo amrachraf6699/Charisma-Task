@@ -1,0 +1,316 @@
+{
+  "info": {
+    "_postman_id": "a445fbf2-911b-43d4-81f3-d4dd1f61766e",
+    "name": "Charisma",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44870068",
+    "_collection_link": "https://go.postman.co/collection/44870068-a445fbf2-911b-43d4-81f3-d4dd1f61766e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "List products",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List products below threshold",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "Application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/products/low-stock",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "low-stock"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get single product",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/a2406c76-3483-4344-8ca9-ebcd88caff0d",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "a2406c76-3483-4344-8ca9-ebcd88caff0d"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Soft delete product",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/a2406bb1-9846-4b95-b314-65abe8cbf4a9",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "a2406bb1-9846-4b95-b314-65abe8cbf4a9"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create a new product",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "sku",
+              "value": "product-12",
+              "description": "Required & min:3 & max:255",
+              "type": "text",
+              "uuid": "07c0e109-f069-41a0-9d37-ee0acd5c1d68"
+            },
+            {
+              "key": "name",
+              "value": "product 1",
+              "description": "Required & min:3 & max:255",
+              "type": "text",
+              "uuid": "fb53c51b-b73d-4405-86da-2d1e520a247b"
+            },
+            {
+              "key": "description",
+              "value": "product 1 Description",
+              "description": "Nullable",
+              "type": "text",
+              "uuid": "d59dde7c-58e1-4d38-bc64-2a46559866b0"
+            },
+            {
+              "key": "price",
+              "value": "11.2",
+              "description": "Required & Numeric & Accept Decimal",
+              "type": "text",
+              "uuid": "1c3c472e-222d-4fbd-b243-9133565388e0"
+            },
+            {
+              "key": "stock_quantity",
+              "value": "3",
+              "description": "Required & Numeric",
+              "type": "text",
+              "uuid": "8865ed71-914b-42f5-bb00-09382e3ae149"
+            },
+            {
+              "key": "low_stock_threshold",
+              "value": "12",
+              "description": "Required & Numeric",
+              "type": "text",
+              "uuid": "f303d14a-df4f-42dd-9796-31c8c903ab01"
+            },
+            {
+              "key": "status",
+              "value": "active",
+              "description": "Requred & in: active,inactive,discontinued",
+              "type": "text",
+              "uuid": "6645a446-9f08-4d95-a392-39d31c82cb0f"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update product",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "_method",
+              "value": "PUT",
+              "type": "text"
+            },
+            {
+              "key": "sku",
+              "value": "product-12",
+              "type": "text",
+              "description": "Required & min:3 & max:255",
+              "uuid": "07c0e109-f069-41a0-9d37-ee0acd5c1d68"
+            },
+            {
+              "key": "name",
+              "value": "product 1",
+              "type": "text",
+              "description": "Required & min:3 & max:255",
+              "uuid": "fb53c51b-b73d-4405-86da-2d1e520a247b"
+            },
+            {
+              "key": "description",
+              "value": "product 1 Description",
+              "type": "text",
+              "description": "Nullable",
+              "uuid": "d59dde7c-58e1-4d38-bc64-2a46559866b0"
+            },
+            {
+              "key": "price",
+              "value": "11.2",
+              "type": "text",
+              "description": "Required & Numeric & Accept Decimal",
+              "uuid": "1c3c472e-222d-4fbd-b243-9133565388e0"
+            },
+            {
+              "key": "stock_quantity",
+              "value": "10",
+              "type": "text",
+              "description": "Required & Numeric",
+              "uuid": "8865ed71-914b-42f5-bb00-09382e3ae149"
+            },
+            {
+              "key": "low_stock_threshold",
+              "value": "12",
+              "type": "text",
+              "description": "Required & Numeric",
+              "uuid": "f303d14a-df4f-42dd-9796-31c8c903ab01"
+            },
+            {
+              "key": "status",
+              "value": "active",
+              "type": "text",
+              "description": "Requred & in: active,inactive,discontinued",
+              "uuid": "6645a446-9f08-4d95-a392-39d31c82cb0f"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/products/a2406c76-3483-4344-8ca9-ebcd88caff0d",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "a2406c76-3483-4344-8ca9-ebcd88caff0d"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Adjust stock",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "quantity",
+              "value": "-1",
+              "description": "Required & Numeric & Accept Negative and positive quantities",
+              "type": "text",
+              "uuid": "39e56749-4110-450f-9dd4-e7567b721e2a"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/products/a2406c76-3483-4344-8ca9-ebcd88caff0d/stock",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "a2406c76-3483-4344-8ca9-ebcd88caff0d",
+            "stock"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    }
+  ]
+}
