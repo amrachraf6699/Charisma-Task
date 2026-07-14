@@ -1,0 +1,72 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: product-inventory-app
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: "${APP_KEY:-base64:MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=}"
+      APP_URL: "http://localhost:${APP_PORT:-8000}"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: "${DB_DATABASE:-product_inventory}"
+      DB_USERNAME: "${DB_USERNAME:-product_inventory}"
+      DB_PASSWORD: "${DB_PASSWORD:-secret}"
+      CACHE_DRIVER: redis
+      REDIS_CLIENT: predis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "null"
+      PRODUCT_LISTING_CACHE_TTL: "${PRODUCT_LISTING_CACHE_TTL:-300}"
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: file
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: >
+      sh -c "composer install
+      && php artisan migrate --force
+      && php artisan serve --host=0.0.0.0 --port=8000"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: product-inventory-postgres
+    ports:
+      - "${DB_FORWARD_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: "${DB_DATABASE:-product_inventory}"
+      POSTGRES_USER: "${DB_USERNAME:-product_inventory}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:-secret}"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: product-inventory-redis
+    ports:
+      - "${REDIS_FORWARD_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:
+  redis-data:
