@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\API\Products\{AdjustStockRequest, StoreRequest, UpdateRequest};
+use App\Http\Requests\API\Products\AdjustStockRequest;
+use App\Http\Requests\API\Products\StoreRequest;
+use App\Http\Requests\API\Products\UpdateRequest;
 use App\Http\Resources\API\ProductResource;
 use App\Models\Product;
 use App\Repositories\ProductRepositoryInterface;
@@ -14,8 +16,7 @@ class ProductController extends Controller
 {
     public function __construct(
         private readonly ProductRepositoryInterface $products
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -25,7 +26,7 @@ class ProductController extends Controller
         $products = Cache::store('redis')
             ->tags(['products'])
             ->remember(
-                'products:index:page:' . $request->query('page', 1),
+                'products:index:page:'.$request->query('page', 1),
                 now()->addSeconds((int) config('cache.product_listing_ttl')),
                 fn () => $this->products->paginate()
             );

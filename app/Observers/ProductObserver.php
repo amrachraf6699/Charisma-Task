@@ -24,7 +24,7 @@ class ProductObserver
         $this->flushProductCache();
 
         if (
-            !$product->wasChanged([
+            ! $product->wasChanged([
                 'stock_quantity',
                 'low_stock_threshold',
             ])

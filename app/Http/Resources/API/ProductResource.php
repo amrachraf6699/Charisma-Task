@@ -18,14 +18,14 @@ class ProductResource extends JsonResource
 
         return
         [
-            'id'=>$this->id,
-            'sku'=>$this->sku,
+            'id' => $this->id,
+            'sku' => $this->sku,
             'name' => $this->name,
-            'description' => $this->when($request->routeIs('products.show'),$this->description),
-            'price' => number_format($this->price,2),
+            'description' => $this->when($request->routeIs('products.show'), $this->description),
+            'price' => number_format($this->price, 2),
             'stock_quantity' => $this->stock_quantity,
             'low_stock_threshold' => $this->low_stock_threshold,
-            'is_low_stock' => $this->when($request->routeIs('products.show'),$this->stock_quantity <= $this->low_stock_threshold),
+            'is_low_stock' => $this->when($request->routeIs('products.show'), $this->stock_quantity <= $this->low_stock_threshold),
             'status' => $this->status,
             'created_at' => $this->created_at,
             'created_at_humanly' => $this->created_at->diffForHumans(),

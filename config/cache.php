@@ -16,7 +16,7 @@ return [
     */
 
     'default' => env('CACHE_DRIVER', 'file'),
-    
+
     'product_listing_ttl' => env('PRODUCT_LISTING_CACHE_TTL', 300),
 
     /*

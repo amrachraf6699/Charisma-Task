@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\API\Products;
 
+use App\Enums\ProductStatus;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\ProductStatus;
 
 class StoreRequest extends FormRequest
 {
@@ -19,18 +20,18 @@ class StoreRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'sku' => ['required','string','max:255','unique:products,sku'],
-            'name' => ['required','string','min:3','max:255'],
-            'description' => ['nullable','string'],
-            'price' => ['required','numeric','min:0'],
-            'stock_quantity' => ['required','integer','min:0'],
-            'low_stock_threshold' => ['required','integer','min:0'],
-            'status' => ['required',Rule::enum(ProductStatus::class)],
+            'sku' => ['required', 'string', 'max:255', 'unique:products,sku'],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'stock_quantity' => ['required', 'integer', 'min:0'],
+            'low_stock_threshold' => ['required', 'integer', 'min:0'],
+            'status' => ['required', Rule::enum(ProductStatus::class)],
         ];
     }
 }
